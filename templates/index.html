@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bird Detection Dashboard</title>
+
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+
+  <!-- Chart.js (for interactive charts) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Skip link for accessibility -->
+  <a href="#mainContent" class="skip-link">Skip to content</a>
+
+  <!-- Navigation Bar -->
+  <header>
+    <nav class="navbar">
+      <div class="container nav-container">
+        <a href="#" class="logo">Bird Detection</a>
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#purpose">Project Purpose</a></li>
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main id="mainContent">
+    <!-- Hero Section with Full-Bleed Background Image -->
+    <section id="home" class="hero">
+      <div class="container hero-text">
+        <h1>Welcome to the Bird Detection and Deterrent System</h1>
+        <p>Monitoring &amp; Protecting Birds Through Innovation</p>
+        <a href="#dashboard" class="btn-cta">View Dashboard</a>
+      </div>
+    </section>
+
+    <!-- Project Purpose Section -->
+   <!-- Project Purpose Section -->
+    <section id="purpose" class="purpose-section">
+      <div class="container purpose-content">
+        <h2>Project Purpose</h2>
+        <p>
+          This IoT project is designed to protect tray return areas by detecting and deterring birds.
+          An Arduino equipped with an ultrasonic sensor is deployed at the tray return area to monitor
+          bird presence, and a buzzer/audio player is activated to scare them away when they approach too close.
+          Critical parameters—such as sensor range, audio selection, and volume—are transmitted to a remotely
+          located Raspberry Pi, allowing adjustments through our web dashboard. Enhancements include a camera
+          connected to the Pi for enhanced detection and distance calculation, periodic data logging into a database,
+          and notifications sent to staff’s phones during periods of frequent bird activity to prompt tray clearing.
+        </p>
+      </div>
+    </section>
+
+
+    <!-- Main Dashboard Section -->
+    <section id="dashboard" class="dashboard-section">
+      <div class="container">
+        <h2>Real-Time Data</h2>
+
+        <!-- Search Filter -->
+        <div class="filter-container">
+          <input type="text" id="searchInput" placeholder="Filter cards by name..." oninput="filterCards()"/>
+        </div>
+
+        <div class="cards">
+          <!-- Ultrasonic Sensor Card -->
+          <div class="card" data-sensor="ultrasonic">
+            <h3>Ultrasonic Sensor</h3>
+            <p>Status: <strong id="distanceStatus">Waiting...</strong></p>
+            <div class="slider-group" title="Drag to adjust the detection area size.">
+              <label for="distanceSlider">
+                Detection Area Size:
+                <strong><span id="distanceValue">50%</span></strong>
+              </label>
+              <input type="range" id="distanceSlider" min="0" max="100" step="1" value="50" oninput="updateDistanceSlider()"/>
+            </div>
+            <button class="learn-more-btn" onclick="openModal('ultrasonicModal')">Learn More</button>
+          </div>
+
+          <!-- Sound Profile Card -->
+          <div class="card" data-sensor="sound">
+            <h3>Sound Profile</h3>
+            <div class="slider-group">
+              <label for="freqSlider">
+                Set Frequency: <strong><span id="freqValue">10%</span></strong>
+              </label>
+              <input type="range" id="freqSlider" min="0" max="100" value="10" step="1" oninput="updateFreqSlider()"/>
+            </div>
+            <button class="learn-more-btn-sound" onclick="openModal('soundModal')">Learn More</button>
+          </div>
+
+          <!-- Deterrent Activity Card -->
+          <div class="card" data-sensor="deterrent">
+            <h3>Deterrent Activity</h3>
+            <p>Active: <strong id="deterrentStatus">ON</strong></p>
+            <button class="toggle-btn" onclick="toggleDeterrentStatus()">Toggle Deterrent</button>
+          </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-container">
+          <canvas id="birdActivityChart" width="400" height="200"></canvas>
+        </div>
+        
+        <!-- Live Video Section -->
+        <div class="video-section">
+          <h2>Live Video Feed</h2>
+          <img id="liveVideo" src="{{ url_for('video_feed') }}" alt="Live Bird Detection Feed">
+        </div>
+        
+        <!-- Download CSV Button -->
+        <div class="download-section">
+            <button id="downloadCsvBtn">Download CSV</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Additional Info Section with Accordion -->
+    <!-- Additional Info Section with Accordion -->
+    <section class="info-section">
+      <div class="container">
+        <h2>How It Works</h2>
+        <div class="accordion">
+          <button class="accordion-toggle">Step 1: Detection</button>
+          <div class="accordion-content">
+            <p>
+              The Arduino at the tray return area continuously monitors for birds using an ultrasonic sensor.
+              A camera connected to the Raspberry Pi further enhances detection by measuring the distance between
+              the birds and the tray area.
+            </p>
+          </div>
+          <button class="accordion-toggle">Step 2: Deterrence</button>
+          <div class="accordion-content">
+            <p>
+              When birds come within a critical range, the Arduino activates a buzzer/audio player to scare them away.
+              Sensor range, audio choice, and volume settings are remotely adjustable via the Raspberry Pi to ensure
+              optimal deterrence.
+            </p>
+          </div>
+          <button class="accordion-toggle">Step 3: Data & Control</button>
+          <div class="accordion-content">
+            <p>
+              Data on bird presence is sent from the Arduino to the Raspberry Pi and stored in a database.
+              This real-time information is displayed on a web dashboard. For periods with frequent bird approaches,
+              a notification is automatically sent to the staff’s phone, prompting timely tray clearing.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+      <div class="container">
+        <h2>Contact Us</h2>
+        <p>
+          Have questions or feedback? Feel free to reach out:
+          <br>
+          <a href="mailto:info@bird-detection.com">info@bird-detection.com</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Credits Section -->
+    <section id="credits" class="credits-section">
+      <div class="container">
+        <h2>Credits</h2>
+        <p>
+          Bird deterrent detection project designed by Ryan, Min, Habib, Students of Nanyang Polytechnic
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Bird Detection &amp; Deterrent System. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTopBtn" title="Go to top">&#8679;</button>
+
+  <!-- Chat Bubble & Chat Window -->
+  <div id="chatBubble" class="chat-bubble" onclick="toggleChatWindow()">Chat</div>
+  <div id="chatWindow" class="chat-window">
+    <div class="chat-header">
+      <span>Help &amp; Chat</span>
+      <button class="chat-close-btn" onclick="toggleChatWindow()">X</button>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-footer">
+      <input type="text" id="chatInput" placeholder="Type your question..." onkeydown="handleEnter(event)"/>
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <!-- Ultrasonic Sensor Modal -->
+  <div id="ultrasonicModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('ultrasonicModal')">&times;</span>
+      <h3>Ultrasonic Sensor Details</h3>
+      <p>
+        Our ultrasonic sensor measures the distance to birds by emitting a short, high-frequency
+        sound and timing how long it takes to bounce back. This allows precise detection without
+        harming or startling the birds. Adjust the threshold and distance to suit your specific
+        environment.
+      </p>
+    </div>
+  </div>
+
+  <!-- Sound Profile Modal -->
+  <div id="soundModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('soundModal')">&times;</span>
+      <h3>Buzzer Frequency Details</h3>
+      <p>
+        Birds are known to be disturbed (without being harmed) by frequencies between 15 to 25 kHz. 
+        Thus, choosing 0% here corresponds to 15kHz while 100% would mean 25kHz.
+        (Ignore the fact that the current buzzer could not output this.)
+      </p>
+    </div>
+  </div>
+
+  <!-- External JavaScript -->
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
