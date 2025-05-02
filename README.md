@@ -22,7 +22,7 @@ AviDefender is an **AI-powered bird detection and deterrent system** designed fo
 
 ## YouTube Demo
 We created a prototype demonstration and user walkthough video as well.
-[![Watch the video](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.iconfinder.com%2Ficons%2F3146788%2Fyoutube_logo_icon&psig=AOvVaw1z6JK1qURNsWsB6nxIyp5Z&ust=1746259965045000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCKjGrrurhI0DFQAAAAAdAAAAABAE)](https://www.youtube.com/watch?v=6p_sFcpTxOY)
+**Watch the video**: https://www.youtube.com/watch?v=6p_sFcpTxOY
 
 ---
 
